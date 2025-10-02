@@ -1,8 +1,11 @@
 #include "MainComponent.h"
 #include "Note.h"
 //==============================================================================
-MainComponent::MainComponent()
+MainComponent::MainComponent() : keyboardComponent(keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard)
 {   
+
+	addAndMakeVisible(keyboardComponent); // Adiciona o teclado virtual à interface
+
     // Pega a lista de dispositivos de entrada MIDI disponíveis.
     auto midiInputs = juce::MidiInput::getAvailableDevices();
 
@@ -32,7 +35,7 @@ MainComponent::MainComponent()
         }
     
 
-    setSize (600, 400);
+    setSize (800, 600);
 }
 
 
@@ -54,7 +57,11 @@ MainComponent::~MainComponent()
 //==============================================================================
 
     void MainComponent::handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message)
-    {
+    {   
+        /* envia a mensagem para a classe que gerencia o estado do teclado
+        esta já atualiza a parte visual */
+		keyboardState.processNextMidiEvent(message);
+
         // Nós estamos interessados em mensagens de noteon (tecla pressionada)
         if (message.isNoteOn())
         {
@@ -91,7 +98,6 @@ void MainComponent::paint (juce::Graphics& g)
 
 void MainComponent::resized()
 {
-    // This is called when the MainComponent is resized.
-    // If you add any child components, this is where you should
-    // update their positions.
+    auto area = getLocalBounds();
+    keyboardComponent.setBounds(area.removeFromBottom(150));
 }
