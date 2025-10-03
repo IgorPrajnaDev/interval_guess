@@ -19,11 +19,11 @@
         //limpa sequencia anteior
         targetSequence.clear();
 
-        //lgica para gerar sequencia aleatoria
+        //lógica para gerar sequencia aleatoria
 
         std::random_device rd;
 		std::mt19937 gen(rd()); // mt = Mersenne Twister, um gerador de numeros pseudoaleatorios
-        //19937 	 o tamanho do estado do gerador, 19937 eh um numero primo
+        //19937 é o tamanho do estado do gerador, 19937 eh um numero primo
 
 		std::uniform_int_distribution<> distrib(60, 72); // Notas MIDI entre C4 (60) e B4 (71)
 
@@ -35,8 +35,8 @@
 
     }
 
-    bool Challenge::isCorrect(const NoteSequence& userSequence) const{
-        
+    bool MelodyChallenge::isCorrect(const NoteSequence& userSequence) const
+    {
         const auto& targetNotes = targetSequence.getNotes();
         const auto& userNotes = userSequence.getNotes();
 

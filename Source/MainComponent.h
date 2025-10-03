@@ -34,5 +34,14 @@ private:
     
     std::unique_ptr<juce::MidiInput> midiInput;
 
+    // declaraçao do botao de start
+
+    juce::TextButton startButton;
+
+	// declaraçao do label para mostrar a pontuaçao e selecionar quantidade notas
+    juce::Slider numNotesSlider;
+    juce::Label numNotesLabel;
+
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent);
 };
