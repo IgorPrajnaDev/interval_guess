@@ -4,6 +4,8 @@
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" headerPath=".design/">
   <MAINGROUP id="BgF16T" name="meloquiz">
     <GROUP id="{7B0FBB06-0935-51B8-200E-E6FCA979152B}" name="Source">
+      <FILE id="Ji6Qts" name="SimpleSineVoice.h" compile="0" resource="0"
+            file="Source/SimpleSineVoice.h"/>
       <FILE id="OY0Osd" name="Challenge.cpp" compile="1" resource="0" file="Source/Challenge.cpp"/>
       <FILE id="N4XoDR" name="Challenge.h" compile="0" resource="0" file="Source/Challenge.h"/>
       <FILE id="Wpdq6K" name="Note.cpp" compile="1" resource="0" file="Source/Note.cpp"/>

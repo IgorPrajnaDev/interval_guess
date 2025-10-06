@@ -7,7 +7,7 @@
 MainComponent::MainComponent() : keyboardComponent(keyboardState, juce::MidiKeyboardComponent::horizontalKeyboard),
                                  midiCollector()
 {
-    // --- CONFIGURA«√O DO SINTETIZADOR DE ¡UDIO ---
+    // --- CONFIGURA√á√ÉO DO SINTETIZADOR DE √ÅUDIO ---
     
     // Adiciono 8 vozes de sintetizador de ondas seno
     for (int i = 0; i < 8; ++i)
@@ -16,32 +16,32 @@ MainComponent::MainComponent() : keyboardComponent(keyboardState, juce::MidiKeyb
     // Adiciono um som que abrange todas as notas MIDI
     synth.addSound(new SimpleSineSound());
     
-    // Configuro o ·udio
+    // Configuro o √°udio
     juce::String error = audioDeviceManager.initialiseWithDefaultDevices(0, 2);
     if (error.isNotEmpty())
     {
-        DBG("Erro ao inicializar ·udio: " + error);
+        DBG("Erro ao inicializar √°udio: " + error);
     }
     
     audioDeviceManager.addAudioCallback(&audioSourcePlayer);
     audioSourcePlayer.setSource(this);
 
-    // --- CONFIGURA«√O DOS COMPONENTES FEITA AQUI, NO CONSTRUTOR ---
+    // --- CONFIGURA√á√ÉO DOS COMPONENTES FEITA AQUI, NO CONSTRUTOR ---
 
-    addAndMakeVisible(keyboardComponent); // Adiciono o teclado virtual ‡ interface
+    addAndMakeVisible(keyboardComponent); // Adiciono o teclado virtual √† interface
 
-    // Configuro o bot„o de iniciar
+    // Configuro o bot√£o de iniciar
     addAndMakeVisible(startButton);
     startButton.setButtonText("Iniciar Novo Jogo");
 
-    // Configuro o bot„o de repetir sequÍncia
+    // Configuro o bot√£o de repetir sequ√™ncia
     addAndMakeVisible(replayButton);
     replayButton.setButtonText("Repetir Sequencia");
-    replayButton.setEnabled(false); // Desabilitado atÈ iniciar um jogo
+    replayButton.setEnabled(false); // Desabilitado at√© iniciar um jogo
     replayButton.onClick = [this]() {
-        // Limpo a entrada do usu·rio ao repetir
+        // Limpo a entrada do usu√°rio ao repetir
         gameEngine.clearUserInput();
-        // Toco a sequÍncia novamente
+        // Toco a sequ√™ncia novamente
         playSequence();
         repaint();
     };
@@ -54,19 +54,19 @@ MainComponent::MainComponent() : keyboardComponent(keyboardState, juce::MidiKeyb
     // Configuro o Label (texto) para o slider
     addAndMakeVisible(numNotesLabel);
 
-    // Modifico a aÁ„o do bot„o
+    // Modifico a a√ß√£o do bot√£o
     startButton.onClick = [this]() {
         // Pego o valor atual do slider
         int numNotes = numNotesSlider.getValue();
         // Inicio o jogo com essa quantidade de notas
         gameEngine.startNewGame(numNotes);
         flashOpacity = 0.0f; // Reseto o flash ao iniciar novo jogo
-        stopTimer(); // Paro qualquer animaÁ„o em andamento
+        stopTimer(); // Paro qualquer anima√ß√£o em andamento
         
-        // Habilito o bot„o de replay
+        // Habilito o bot√£o de replay
         replayButton.setEnabled(true);
         
-        // Debug: Mostro a sequÍncia gerada
+        // Debug: Mostro a sequ√™ncia gerada
         const auto& targetSequence = gameEngine.getCurrentTargetSequence().getNotes();
         juce::String sequenceDebug = "Sequencia gerada: ";
         for (const auto& note : targetSequence)
@@ -75,13 +75,13 @@ MainComponent::MainComponent() : keyboardComponent(keyboardState, juce::MidiKeyb
         }
         DBG(sequenceDebug);
         
-        // Toco a sequÍncia do desafio
+        // Toco a sequ√™ncia do desafio
         playSequence();
         
         repaint();
     };
 
-    // Pego a lista de dispositivos de entrada MIDI disponÌveis.
+    // Pego a lista de dispositivos de entrada MIDI dispon√≠veis.
     auto midiInputs = juce::MidiInput::getAvailableDevices();
 
     // Se encontro pelo menos um dispositivo...
@@ -112,7 +112,7 @@ MainComponent::MainComponent() : keyboardComponent(keyboardState, juce::MidiKeyb
     setSize(800, 600);
 }
 
-// O mÈtodo destrutor de MainComponent desativa o dispositivo!
+// O m√©todo destrutor de MainComponent desativa o dispositivo!
 MainComponent::~MainComponent()
 {
     audioSourcePlayer.setSource(nullptr);
@@ -140,15 +140,15 @@ void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
     juce::MidiBuffer incomingMidi;
     midiCollector.removeNextBlockOfMessages(incomingMidi, bufferToFill.numSamples);
     
-    // Buffer separado para as notas do desafio (n„o ser· enviado ao keyboardState)
+    // Buffer separado para as notas do desafio (n√£o ser√° enviado ao keyboardState)
     juce::MidiBuffer challengeMidi;
     
-    // Se estou tocando a sequÍncia, adiciono as notas ao buffer MIDI do desafio
+    // Se estou tocando a sequ√™ncia, adiciono as notas ao buffer MIDI do desafio
     if (isPlayingSequence && !sequenceBuffer.isEmpty())
     {
         challengeMidi.addEvents(sequenceBuffer, 0, bufferToFill.numSamples, 0);
         
-        // Removo as mensagens que j· foram tocadas
+        // Removo as mensagens que j√° foram tocadas
         juce::MidiBuffer remainingBuffer;
         for (const auto metadata : sequenceBuffer)
         {
@@ -164,21 +164,21 @@ void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
             isPlayingSequence = false;
     }
     
-    // IMPORTANTE: Apenas as notas do usu·rio v„o para o keyboardState (animaÁ„o visual)
+    // IMPORTANTE: Apenas as notas do usu√°rio v√£o para o keyboardState (anima√ß√£o visual)
     keyboardState.processNextMidiBuffer(incomingMidi, 0, bufferToFill.numSamples, true);
     
-    // Combino as notas do usu·rio E do desafio para o sintetizador (som)
+    // Combino as notas do usu√°rio E do desafio para o sintetizador (som)
     juce::MidiBuffer combinedMidi;
     combinedMidi.addEvents(incomingMidi, 0, bufferToFill.numSamples, 0);
     combinedMidi.addEvents(challengeMidi, 0, bufferToFill.numSamples, 0);
     
-    // Renderizo o ·udio com AMBAS as notas
+    // Renderizo o √°udio com AMBAS as notas
     synth.renderNextBlock(*bufferToFill.buffer, combinedMidi, 0, bufferToFill.numSamples);
 }
 
 void MainComponent::releaseResources()
 {
-    // LiberaÁ„o de recursos quando o ·udio para
+    // Libera√ß√£o de recursos quando o √°udio para
 }
 
 void MainComponent::playSequence()
@@ -190,7 +190,7 @@ void MainComponent::playSequence()
     
     sequenceBuffer.clear();
     
-    // Crio mensagens MIDI para cada nota da sequÍncia
+    // Crio mensagens MIDI para cada nota da sequ√™ncia
     int sampleOffset = 0;
     const int noteDurationSamples = static_cast<int>(sampleRate * 0.5); // 500ms por nota
     const int noteGapSamples = static_cast<int>(sampleRate * 0.2); // 200ms de pausa entre notas
@@ -214,7 +214,7 @@ void MainComponent::playSequence()
 //==============================================================================
 void MainComponent::handleIncomingMidiMessage(juce::MidiInput* source, const juce::MidiMessage& message)
 {
-    // CORRE«√O: Envio o evento MIDI para o coletor de forma thread-safe
+    // CORRE√á√ÉO: Envio o evento MIDI para o coletor de forma thread-safe
     midiCollector.addMessageToQueue(message);
     
     // Atualizo o estado do teclado de forma thread-safe
@@ -223,27 +223,27 @@ void MainComponent::handleIncomingMidiMessage(juce::MidiInput* source, const juc
     // Estou interessado em mensagens de noteOn (tecla pressionada)
     if (message.isNoteOn())
     {
-        // Extraio informaÁıes do evento MIDI
+        // Extraio informa√ß√µes do evento MIDI
         int midiNoteNumber = message.getNoteNumber();
         int velocity = message.getVelocity();
 
-        // Imprimo no console de debug para ver se est· funcionando
+        // Imprimo no console de debug para ver se est√° funcionando
         DBG("Note On: " << midiNoteNumber << " Velocity: " << velocity);
 
         // =================================================================
-        // AQUI … A CONEX√O COM A L”GICA DO JOGO
+        // AQUI √â A CONEX√ÉO COM A L√ìGICA DO JOGO
         // Crio um objeto Note e o passo para o GameEngine.  
         gameEngine.processUserInput(Note(midiNoteNumber, velocity));
         // =================================================================
 
-        // --- L”GICA ADICIONADA PARA VERIFICAR A JOGADA ---
+        // --- L√ìGICA ADICIONADA PARA VERIFICAR A JOGADA ---
         const auto numNotesInChallenge = gameEngine.getCurrentTargetSequence().getNotes().size();
-        // Garanto que sÛ verifico se o desafio j· comeÁou (numNotesInChallenge > 0)
+        // Garanto que s√≥ verifico se o desafio j√° come√ßou (numNotesInChallenge > 0)
         if (numNotesInChallenge > 0 && gameEngine.getUserInputSequence().getNotes().size() >= numNotesInChallenge)
         {
-            bool correct = gameEngine.checkUserSequence(); // Verifico se a resposta est· certa
+            bool correct = gameEngine.checkUserSequence(); // Verifico se a resposta est√° certa
             
-            // CORRE«√O: Uso MessageManager::callAsync para atualizar a GUI de forma thread-safe
+            // CORRE√á√ÉO: Uso MessageManager::callAsync para atualizar a GUI de forma thread-safe
             juce::MessageManager::callAsync([this, correct]() {
                 // Inicio o efeito de flash na tela
                 flashColour = correct ? juce::Colours::green : juce::Colours::red;
@@ -252,10 +252,10 @@ void MainComponent::handleIncomingMidiMessage(juce::MidiInput* source, const juc
                 
                 repaint(); // Mando a tela se redesenhar para mostrar o novo placar/desafio
                 
-                // Se acertou, toco a prÛxima sequÍncia automaticamente
+                // Se acertou, toco a pr√≥xima sequ√™ncia automaticamente
                 if (correct)
                 {
-                    // Aguardo um pouco antes de tocar a prÛxima
+                    // Aguardo um pouco antes de tocar a pr√≥xima
                     juce::Timer::callAfterDelay(1500, [this]() {
                         // CORRIGIDO: Uso nextLevel() em vez de startNewGame() para manter o score
                         gameEngine.nextLevel();
@@ -265,7 +265,7 @@ void MainComponent::handleIncomingMidiMessage(juce::MidiInput* source, const juc
                 }
                 else
                 {
-                    // Se errou, limpo a entrada do usu·rio apÛs o flash
+                    // Se errou, limpo a entrada do usu√°rio ap√≥s o flash
                     // para permitir nova tentativa
                     juce::Timer::callAfterDelay(1000, [this]() {
                         gameEngine.clearUserInput();
@@ -274,9 +274,9 @@ void MainComponent::handleIncomingMidiMessage(juce::MidiInput* source, const juc
                 }
             });
         }
-        // --- FIM DA L”GICA ADICIONADA ---
+        // --- FIM DA L√ìGICA ADICIONADA ---
     }
-    // TambÈm posso checar por mensagens de "Nota Desligada" (tecla solta)
+    // Tamb√©m posso checar por mensagens de "Nota Desligada" (tecla solta)
     else if (message.isNoteOff())
     {
         int midiNoteNumber = message.getNoteNumber();
@@ -287,7 +287,7 @@ void MainComponent::handleIncomingMidiMessage(juce::MidiInput* source, const juc
 //==============================================================================
 void MainComponent::paint(juce::Graphics& g)
 {
-    // Preencho completamente o fundo com uma cor sÛlida
+    // Preencho completamente o fundo com uma cor s√≥lida
     g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 
     g.setFont(juce::Font(30.0f));
@@ -339,27 +339,27 @@ void MainComponent::paint(juce::Graphics& g)
 
 void MainComponent::resized()
 {
-    // --- M…TODO RESIZED CORRIGIDO ---
+    // --- M√âTODO RESIZED CORRIGIDO ---
     auto area = getLocalBounds();
 
-    // Crio uma ·rea no topo para os controles
+    // Crio uma √°rea no topo para os controles
     auto controlsArea = area.removeFromTop(100);
     
-    // Divido a ·rea de controles em duas colunas
+    // Divido a √°rea de controles em duas colunas
     auto leftControls = controlsArea.removeFromLeft(controlsArea.getWidth() / 2);
     auto rightControls = controlsArea;
     
-    // Lado esquerdo: Bot„o de iniciar
+    // Lado esquerdo: Bot√£o de iniciar
     startButton.setBounds(leftControls.removeFromTop(60).reduced(20));
     
-    // Lado direito: Bot„o de replay
+    // Lado direito: Bot√£o de replay
     replayButton.setBounds(rightControls.removeFromTop(60).reduced(20));
 
-    // Posiciono o slider abaixo dos botıes (·rea que sobrou)
+    // Posiciono o slider abaixo dos bot√µes (√°rea que sobrou)
     auto sliderArea = area.removeFromTop(40);
     numNotesSlider.setBounds(sliderArea.withLeft(150).reduced(20, 0));
 
-    // Posiciono o teclado na ·rea inferior
+    // Posiciono o teclado na √°rea inferior
     keyboardComponent.setBounds(area.removeFromBottom(150));
 }
 
