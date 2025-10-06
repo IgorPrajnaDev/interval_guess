@@ -11,7 +11,7 @@
 
 #include "Challenge.h"
 
-// Como Challenge é uma classe abstrata, não implementamos os métodos virtuais puros.
+// Como Challenge é uma classe abstrata, não implemento os métodos virtuais puros.
 // Apenas os métodos que já têm uma implementação.
 
 const NoteSequence& Challenge::getTargetSequence() const

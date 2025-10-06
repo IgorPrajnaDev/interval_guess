@@ -15,7 +15,7 @@
 class MelodyChallenge : public Challenge
 {
 public:
-    // A palavra-chave 'override' garante que estamos sobrescrevendo um m	do do virtual
+    // A palavra-chave 'override' garante que estou sobrescrevendo um método virtual
     void generateSequence(int difficulty) override;
     bool isCorrect(const NoteSequence& userSequence) const override;
 };

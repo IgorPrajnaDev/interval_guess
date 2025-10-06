@@ -1,4 +1,3 @@
-
 /*
   ==============================================================================
 
@@ -10,23 +9,86 @@
 */
 
 #include "GameEngine.h"
+#include "MelodyChallenge.h"
 
-GameEngine::GameEngine()
+GameEngine::GameEngine() : score(0), current_challenge_size(3) // Inicia com 3 notas
 {
-    // O construtor. A l√≥gica de inicializa√ß√£o do jogo vir√° aqui.
+    // Se eu quisesse iniciar o jogo automaticamente, poderia chamar startNewGame() aqui
 }
 
-void GameEngine::startNewGame()
+void GameEngine::startNewGame(int notes_quantity)
 {
-    // Implementa√ß√£o para iniciar um novo jogo.
+    score = 0; // Reseta score apenas quando inicio novo jogo
+    current_challenge_size = notes_quantity;
+
+    userInputSequence.clear(); // Limpa a sequÍncia tocada anteriormente
+
+    currentChallenge = std::make_unique<MelodyChallenge>(); // GameEngine tem um ˙nico MelodyChallenge
+
+    currentChallenge->generateSequence(current_challenge_size); 
 }
 
 void GameEngine::nextLevel()
 {
-    // Implementa√ß√£o para avan√ßar de n√≠vel.
+    // N√O incremento mais o tamanho - mantenho o mesmo nÌvel
+    // current_challenge_size++; // REMOVIDO - sem progress„o autom·tica
+    
+    userInputSequence.clear(); // Limpa a sequÍncia tocada anteriormente
+
+    currentChallenge = std::make_unique<MelodyChallenge>(); // GameEngine tem um ˙nico MelodyChallenge
+
+    currentChallenge->generateSequence(current_challenge_size); 
+}
+
+bool GameEngine::checkUserSequence()
+{
+    if (!currentChallenge)
+        return false; // Nenhum desafio ativo
+    bool correct = currentChallenge->isCorrect(userInputSequence);
+    if (correct)
+    {
+        score += current_challenge_size * 10; // Exemplo: 10 pontos por nota correta
+        // REMOVIDO: current_challenge_size++; 
+        // O incremento agora acontece em nextLevel()
+    }
+    else
+    {
+        score -= 5; // Penalidade por erro
+        if (score < 0) score = 0; // Evita pontuaÁ„o negativa
+    }
+    
+    return correct;
 }
 
 void GameEngine::processUserInput(const Note& note)
 {
-    // Implementa√ß√£o para processar a nota tocada pelo usu√°rio.
+    userInputSequence.addNote(note);
 }
+
+void GameEngine::clearUserInput()
+{
+    userInputSequence.clear();
+}
+
+int GameEngine::getScore() const
+{
+    return score;
+}
+
+const NoteSequence& GameEngine::getUserInputSequence() const
+{
+    return userInputSequence;
+}
+
+const NoteSequence& GameEngine::getCurrentTargetSequence() const
+{
+    // Garanto que n„o tento acessar um desafio que n„o existe.
+    if (currentChallenge)
+        return currentChallenge->getTargetSequence();
+
+    // Se n„o houver desafio ativo, retorno uma sequÍncia vazia segura
+    // para evitar que o programa crashe.
+    static const NoteSequence emptySequence;
+    return emptySequence;
+}
+// ------------------------------------
