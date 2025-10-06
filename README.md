@@ -1,6 +1,7 @@
 ﻿# 🎹 MeloQuiz - Jogo de Treinamento de Ouvido Musical
 
-Uploading 2025-10-06 15-12-55.mp4…
+https://github.com/user-attachments/assets/875ebcb4-7773-405e-8ac7-aafc23688d4b
+
 
 
 [![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://isocpp.org/)
