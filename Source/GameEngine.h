@@ -23,9 +23,11 @@ public:
     GameEngine();
 
     void startNewGame(int notes_quantity);
+    void nextLevel(); // Avança para próximo nível sem resetar score
     void processUserInput(const Note& note);
     bool checkUserSequence();
     const NoteSequence& getUserInputSequence() const;
+    void clearUserInput(); // Método para limpar entrada do usuário
 
     int getScore() const;
 
@@ -35,5 +37,5 @@ private:
     std::unique_ptr<Challenge> currentChallenge;
     NoteSequence userInputSequence;
     int score;
-	int current_challenge_size; //para lembrar o tamanho da sequencia atual para dar devidos pontos
+    int current_challenge_size; // Para lembrar o tamanho da sequência atual para dar devidos pontos
 };

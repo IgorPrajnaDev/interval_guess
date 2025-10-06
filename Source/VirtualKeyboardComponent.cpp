@@ -8,16 +8,6 @@
   ==============================================================================
 */
 
-/*
-  ==============================================================================
-
-    VirtualKeyboardComponent.cpp
-    Created: 26 Sep 2025 5:36:12pm
-    Author:  Wolney
-
-  ==============================================================================
-*/
-
 #include "VirtualKeyboardComponent.h"
 
 VirtualKeyboardComponent::VirtualKeyboardComponent()
@@ -31,7 +21,7 @@ VirtualKeyboardComponent::~VirtualKeyboardComponent()
 
 void VirtualKeyboardComponent::paint(juce::Graphics& g)
 {
-    // Preenche o fundo do componente com a cor preta.
+    // Preencho o fundo do componente com a cor preta.
     g.fillAll(juce::Colours::black);
     
     // O código para desenhar as teclas do piano virá aqui.

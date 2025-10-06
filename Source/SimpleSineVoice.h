@@ -90,7 +90,7 @@ public:
         {
             while (--numSamples >= 0)
             {
-                // Gera som de piano usando harmônicos
+                // Gero som de piano usando harmônicos
                 // A intensidade dos harmônicos varia com a frequência
                 auto fundamental = std::sin(currentAngle);
                 auto harmonic2 = 0.6 * std::sin(2.0 * currentAngle);   // Segunda harmônica (oitava)
@@ -102,14 +102,14 @@ public:
                 // Harmônicos ímpares mais fortes (característico do piano)
                 auto harmonic7 = 0.03 * std::sin(7.0 * currentAngle);
                 
-                // Combina harmônicos para criar timbre de piano
+                // Combino harmônicos para criar timbre de piano
                 auto pianoWave = fundamental + harmonic2 + harmonic3 + harmonic4 + 
                                 harmonic5 + harmonic6 + harmonic7;
                 
-                // Normaliza (evita clipping) - ajustado para os novos harmônicos
+                // Normalizo (evito clipping) - ajustado para os novos harmônicos
                 pianoWave *= 0.4;
                 
-                // Aplica envelope ADSR
+                // Aplico envelope ADSR
                 auto envelopeValue = adsr.getNextSample();
                 auto currentSample = (float)(pianoWave * level * envelopeValue);
 
@@ -119,7 +119,7 @@ public:
                 currentAngle += angleDelta;
                 ++startSample;
                 
-                // Se o envelope terminou, para a nota
+                // Se o envelope terminou, paro a nota
                 if (!adsr.isActive())
                 {
                     clearCurrentNote();

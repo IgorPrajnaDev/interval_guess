@@ -6,11 +6,11 @@
   ==============================================================================
 */
 
-// A "regra de ouro": JuceHeader.h e os cabealhos do proprio componente primeiro.
+// A "regra de ouro": JuceHeader.h e os cabeçalhos do próprio componente primeiro.
 #include <JuceHeader.h>
 #include "MainComponent.h"
 
-// Agora, os includes para  arquitetura customizada.
+// Agora, os includes para arquitetura customizada.
 
 #include "Challenge.h"
 #include "GameEngine.h"
@@ -41,7 +41,7 @@ public:
 
     void shutdown() override
     {
-        mainWindow = nullptr; // (deletes our window)
+        mainWindow = nullptr; // Deleta a janela
     }
 
     //==============================================================================
@@ -91,5 +91,5 @@ private:
 };
 
 //==============================================================================
-// This macro generates the main() routine that launches the app.
+// Esta macro gera a rotina main() que inicia a aplicação.
 START_JUCE_APPLICATION(interval_guessApplication)
